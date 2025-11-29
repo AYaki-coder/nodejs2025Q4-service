@@ -1,9 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { CreateAlbumDto } from './dto/create-album.dto';
 import { UpdateAlbumDto } from './dto/update-album.dto';
+import { InMemoryDatabaseService } from '../in-memory-database/in-memory-database.service';
 
 @Injectable()
 export class AlbumService {
+  constructor(private readonly db: InMemoryDatabaseService) {}
+
   create(createAlbumDto: CreateAlbumDto) {
     return 'This action adds a new album';
   }

@@ -7,7 +7,6 @@ import { TrackModule } from './track/track.module';
 import { AlbumModule } from './album/album.module';
 import { UserModule } from './user/user.module';
 import { InMemoryDatabaseModule } from './in-memory-database/in-memory-database.module';
-import { InMemoryService } from './database/in-memory-/in-memory-.service';
 
 @Module({
   imports: [
@@ -19,6 +18,6 @@ import { InMemoryService } from './database/in-memory-/in-memory-.service';
     InMemoryDatabaseModule,
   ],
   controllers: [AppController],
-  providers: [AppService, InMemoryService],
+  providers: [AppService],
 })
 export class AppModule {}

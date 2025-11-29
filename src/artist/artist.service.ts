@@ -1,9 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { CreateArtistDto } from './dto/create-artist.dto';
 import { UpdateArtistDto } from './dto/update-artist.dto';
+import { InMemoryDatabaseService } from '../in-memory-database/in-memory-database.service';
 
 @Injectable()
 export class ArtistService {
+  constructor(private readonly db: InMemoryDatabaseService) {}
+
   create(createArtistDto: CreateArtistDto) {
     return 'This action adds a new artist';
   }
