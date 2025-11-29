@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from '../user/dto/create-user.dto';
 import { User } from '../user/entities/user.entity';
 import { randomUUID } from 'node:crypto';
-import { UpdateUserDto } from '../user/dto/update-user.dto';
 import { Artist } from '../artist/entities/artist.entity';
 import { CreateArtistDto } from '../artist/dto/create-artist.dto';
 import { UpdateArtistDto } from '../artist/dto/update-artist.dto';
@@ -10,26 +9,27 @@ import { Album } from '../album/entities/album.entity';
 import { UpdateAlbumDto } from '../album/dto/update-album.dto';
 import { CreateAlbumDto } from '../album/dto/create-album.dto';
 import { Track } from '../track/entities/track.entity';
-import { CreateTrackDto } from 'src/track/dto/create-track.dto';
-import { UpdateTrackDto } from 'src/track/dto/update-track.dto';
+import { CreateTrackDto } from '../track/dto/create-track.dto';
+import { UpdateTrackDto } from '../track/dto/update-track.dto';
+import { UpdatePasswordDto } from '../user/dto/update-password.dto';
 
 @Injectable()
 export class InMemoryDatabaseService {
   private readonly users: User[] = [];
-  public readonly artists: Artist[] = [];
-  public readonly albums: Album[] = [];
-  public readonly tracks: Track[] = [];
+  private readonly artists: Artist[] = [];
+  private readonly albums: Album[] = [];
+  private readonly tracks: Track[] = [];
   // public readonly favorites: Favorite[] = [];
 
-  public getAllUsers(): User[] {
+  getAllUsers(): User[] {
     return this.users;
   }
 
-  public getUserById(id: string): User | undefined {
+  getUserById(id: string): User | undefined {
     return this.users.find((x) => x.id === id);
   }
 
-  public createUser(dto: CreateUserDto): User {
+  createUser(dto: CreateUserDto): User {
     const now = Date.now();
     const user = {
       id: randomUUID(),
@@ -45,7 +45,7 @@ export class InMemoryDatabaseService {
     return user;
   }
 
-  public updateUser(id: string, dto: UpdateUserDto): User | undefined {
+  updateUser(id: string, dto: UpdatePasswordDto): User | undefined {
     const user = this.getUserById(id);
 
     if (!user) {
@@ -60,7 +60,7 @@ export class InMemoryDatabaseService {
     return user;
   }
 
-  public deleteUser(id: string): User | undefined {
+  deleteUser(id: string): User | undefined {
     const inx = this.users.findIndex((x) => x.id === id);
     if (!inx) {
       return;
@@ -71,15 +71,15 @@ export class InMemoryDatabaseService {
     return deletedUser[0];
   }
 
-  public getAllArtists(): Artist[] {
+  getAllArtists(): Artist[] {
     return this.artists;
   }
 
-  public getArtistById(id: string): Artist | undefined {
+  getArtistById(id: string): Artist | undefined {
     return this.artists.find((x) => x.id === id);
   }
 
-  public createArtist(dto: CreateArtistDto): Artist {
+  createArtist(dto: CreateArtistDto): Artist {
     const artist = {
       id: randomUUID(),
       ...dto,
@@ -90,7 +90,7 @@ export class InMemoryDatabaseService {
     return artist;
   }
 
-  public updateArtist(id: string, dto: UpdateArtistDto): Artist | undefined {
+  updateArtist(id: string, dto: UpdateArtistDto): Artist | undefined {
     const artist = this.getArtistById(id);
 
     if (!artist) {
@@ -102,7 +102,7 @@ export class InMemoryDatabaseService {
     return artist;
   }
 
-  public deleteArtist(id: string): Artist | undefined {
+  deleteArtist(id: string): Artist | undefined {
     const inx = this.artists.findIndex((x) => x.id === id);
     if (!inx) {
       return;
@@ -113,15 +113,15 @@ export class InMemoryDatabaseService {
     return deletedArtist[0];
   }
 
-  public getAllAlbums(): Album[] {
+  getAllAlbums(): Album[] {
     return this.albums;
   }
 
-  public getAlbumById(id: string): Album | undefined {
+  getAlbumById(id: string): Album | undefined {
     return this.albums.find((x) => x.id === id);
   }
 
-  public createAlbum(dto: CreateAlbumDto): Album {
+  createAlbum(dto: CreateAlbumDto): Album {
     const album = {
       id: randomUUID(),
       ...dto,
@@ -132,7 +132,7 @@ export class InMemoryDatabaseService {
     return album;
   }
 
-  public updateAlbum(id: string, dto: UpdateAlbumDto): Album | undefined {
+  updateAlbum(id: string, dto: UpdateAlbumDto): Album | undefined {
     const album = this.getAlbumById(id);
 
     if (!album) {
@@ -144,7 +144,7 @@ export class InMemoryDatabaseService {
     return album;
   }
 
-  public deleteAlbum(id: string): Album | undefined {
+  deleteAlbum(id: string): Album | undefined {
     const inx = this.albums.findIndex((x) => x.id === id);
     if (!inx) {
       return;
@@ -155,15 +155,15 @@ export class InMemoryDatabaseService {
     return deletedAlbum[0];
   }
 
-  public getAllTracks(): Track[] {
+  getAllTracks(): Track[] {
     return this.tracks;
   }
 
-  public getTrackById(id: string): Track | undefined {
+  getTrackById(id: string): Track | undefined {
     return this.tracks.find((x) => x.id === id);
   }
 
-  public createTrack(dto: CreateTrackDto): Track {
+  createTrack(dto: CreateTrackDto): Track {
     const track = {
       id: randomUUID(),
       ...dto,
@@ -174,7 +174,7 @@ export class InMemoryDatabaseService {
     return track;
   }
 
-  public updateTrack(id: string, dto: UpdateTrackDto): Track | undefined {
+  updateTrack(id: string, dto: UpdateTrackDto): Track | undefined {
     const track = this.getTrackById(id);
 
     if (!track) {
@@ -186,7 +186,7 @@ export class InMemoryDatabaseService {
     return track;
   }
 
-  public deleteTrack(id: string): Track | undefined {
+  deleteTrack(id: string): Track | undefined {
     const inx = this.albums.findIndex((x) => x.id === id);
     if (!inx) {
       return;
