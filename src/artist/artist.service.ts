@@ -56,6 +56,8 @@ export class ArtistService {
       this.db.updateAlbum(album.id, { ...album, artistId: null }),
     );
 
+    this.db.deleteArtistFromFavorites(id);
+
     return deletedArtist;
   }
 }

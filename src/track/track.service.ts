@@ -39,6 +39,8 @@ export class TrackService {
     if (!deletedTrack) {
       throw new NotFoundException();
     }
+
+    this.db.deleteTrackFromFavorites(id);
     return deletedTrack;
   }
 }

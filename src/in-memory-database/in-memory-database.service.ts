@@ -12,6 +12,7 @@ import { Track } from '../track/entities/track.entity';
 import { CreateTrackDto } from '../track/dto/create-track.dto';
 import { UpdateTrackDto } from '../track/dto/update-track.dto';
 import { UpdatePasswordDto } from '../user/dto/update-password.dto';
+import { Favorite } from '../favorites/entities/favorite.entity';
 
 @Injectable()
 export class InMemoryDatabaseService {
@@ -19,7 +20,11 @@ export class InMemoryDatabaseService {
   private readonly artists: Artist[] = [];
   private readonly albums: Album[] = [];
   private readonly tracks: Track[] = [];
-  // public readonly favorites: Favorite[] = [];
+  private readonly favorites: Favorite = {
+    albums: [],
+    artists: [],
+    tracks: [],
+  };
 
   getAllUsers(): User[] {
     return this.users;
@@ -195,5 +200,69 @@ export class InMemoryDatabaseService {
     const deletedTrack: Track[] = this.tracks.splice(inx, 1);
 
     return deletedTrack[0];
+  }
+
+  getAllFavorites(): Favorite {
+    return this.favorites;
+  }
+
+  addTrackToFavorites(id: string): string {
+    const trackId = this.favorites.tracks.find((x) => x === id);
+    if (trackId) {
+      return trackId;
+    }
+    this.favorites.tracks.push(id);
+    return id;
+  }
+
+  addAlbumToFavorites(id: string): string {
+    const albumId = this.favorites.albums.find((x) => x === id);
+    if (albumId) {
+      return albumId;
+    }
+    this.favorites.albums.push(id);
+    return id;
+  }
+
+  addArtistToFavorites(id: string): string {
+    const artistId = this.favorites.artists.find((x) => x === id);
+    if (artistId) {
+      return artistId;
+    }
+    this.favorites.artists.push(id);
+    return id;
+  }
+
+  deleteTrackFromFavorites(id: string): string {
+    const inx = this.favorites.tracks.findIndex((x) => x === id);
+    if (inx === -1) {
+      return;
+    }
+
+    const deletedTrackId: string[] = this.favorites.tracks.splice(inx, 1);
+
+    return deletedTrackId[0];
+  }
+
+  deleteAlbumFromFavorites(id: string): string {
+    const inx = this.favorites.albums.findIndex((x) => x === id);
+    if (inx === -1) {
+      return;
+    }
+
+    const deletedAlbumId: string[] = this.favorites.albums.splice(inx, 1);
+
+    return deletedAlbumId[0];
+  }
+
+  deleteArtistFromFavorites(id: string): string {
+    const inx = this.favorites.artists.findIndex((x) => x === id);
+    if (inx === -1) {
+      return;
+    }
+
+    const deletedArtistId: string[] = this.favorites.artists.splice(inx, 1);
+
+    return deletedArtistId[0];
   }
 }

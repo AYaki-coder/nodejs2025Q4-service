@@ -48,6 +48,8 @@ export class AlbumService {
       this.db.updateTrack(track.id, { ...track, albumId: null }),
     );
 
+    this.db.deleteAlbumFromFavorites(id);
+
     return deletedAlbum;
   }
 }
