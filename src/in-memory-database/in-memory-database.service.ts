@@ -62,7 +62,7 @@ export class InMemoryDatabaseService {
 
   deleteUser(id: string): User | undefined {
     const inx = this.users.findIndex((x) => x.id === id);
-    if (!inx) {
+    if (inx === -1) {
       return;
     }
 
@@ -104,7 +104,7 @@ export class InMemoryDatabaseService {
 
   deleteArtist(id: string): Artist | undefined {
     const inx = this.artists.findIndex((x) => x.id === id);
-    if (!inx) {
+    if (inx === -1) {
       return;
     }
 
@@ -146,7 +146,7 @@ export class InMemoryDatabaseService {
 
   deleteAlbum(id: string): Album | undefined {
     const inx = this.albums.findIndex((x) => x.id === id);
-    if (!inx) {
+    if (inx === -1) {
       return;
     }
 
@@ -187,8 +187,8 @@ export class InMemoryDatabaseService {
   }
 
   deleteTrack(id: string): Track | undefined {
-    const inx = this.albums.findIndex((x) => x.id === id);
-    if (!inx) {
+    const inx = this.tracks.findIndex((x) => x.id === id);
+    if (inx === -1) {
       return;
     }
 

@@ -1,29 +1,44 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateTrackDto } from './dto/create-track.dto';
 import { UpdateTrackDto } from './dto/update-track.dto';
 import { InMemoryDatabaseService } from '../in-memory-database/in-memory-database.service';
+import { Track } from './entities/track.entity';
 
 @Injectable()
 export class TrackService {
   constructor(private readonly db: InMemoryDatabaseService) {}
 
-  create(createTrackDto: CreateTrackDto) {
-    return 'This action adds a new track';
+  create(createTrackDto: CreateTrackDto): Track {
+    return this.db.createTrack(createTrackDto);
   }
 
-  findAll() {
-    return `This action returns all track`;
+  findAll(): Track[] {
+    return this.db.getAllTracks();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} track`;
+  findOne(id: string): Track {
+    const track = this.db.getTrackById(id);
+    if (!track) {
+      throw new NotFoundException();
+    }
+
+    return track;
   }
 
-  update(id: number, updateTrackDto: UpdateTrackDto) {
-    return `This action updates a #${id} track`;
+  update(id: string, updateTrackDto: UpdateTrackDto): Track {
+    const track = this.db.getTrackById(id);
+    if (!track) {
+      throw new NotFoundException();
+    }
+
+    return this.db.updateTrack(id, updateTrackDto);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} track`;
+  remove(id: string): Track {
+    const deletedTrack = this.db.deleteTrack(id);
+    if (!deletedTrack) {
+      throw new NotFoundException();
+    }
+    return deletedTrack;
   }
 }
