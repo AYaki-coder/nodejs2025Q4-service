@@ -12,27 +12,75 @@ import {
 import { ArtistService } from './artist.service';
 import { CreateArtistDto } from './dto/create-artist.dto';
 import { UpdateArtistDto } from './dto/update-artist.dto';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { Artist } from './entities/artist.entity';
 
+@ApiTags('artists')
 @Controller('artist')
 export class ArtistController {
   constructor(private readonly artistService: ArtistService) {}
 
   @Post()
+  @ApiOperation({ summary: 'Create a new artist' })
+  @ApiResponse({
+    status: 201,
+    description: 'The artist has been successfully created.',
+    type: Artist,
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Bad Request (Validation failure).',
+  })
   create(@Body() createArtistDto: CreateArtistDto) {
     return this.artistService.create(createArtistDto);
   }
 
   @Get()
-  findAll() {
+  @ApiOperation({ summary: 'Retrieve all artists' })
+  @ApiResponse({
+    status: 200,
+    description: 'Return all artists.',
+    type: Artist,
+    isArray: true,
+  })
+  findAll(): Artist[] {
     return this.artistService.findAll();
   }
 
   @Get(':id')
+  @ApiOperation({ summary: 'Retrieve an artist' })
+  @ApiResponse({
+    status: 200,
+    description: 'The artist has been successfully retrieved.',
+    type: Artist,
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Bad Request (Validation failure).',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Not Found.',
+  })
   findOne(@Param('id', ParseUUIDPipe) id: string) {
     return this.artistService.findOne(id);
   }
 
   @Put(':id')
+  @ApiOperation({ summary: 'Update an artist' })
+  @ApiResponse({
+    status: 200,
+    description: 'The artist has been successfully updated.',
+    type: Artist,
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Bad Request (Validation failure).',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Not Found.',
+  })
   update(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() updateArtistDto: UpdateArtistDto,
@@ -42,6 +90,21 @@ export class ArtistController {
 
   @Delete(':id')
   @HttpCode(204)
+  @ApiOperation({
+    summary: 'Delete an artist',
+    description: 'The artist has been successfully deleted.',
+  })
+  @ApiResponse({
+    status: 204,
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Bad Request (Validation failure).',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Not Found.',
+  })
   remove(@Param('id', ParseUUIDPipe) id: string) {
     return this.artistService.remove(id);
   }

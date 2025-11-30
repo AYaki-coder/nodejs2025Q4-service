@@ -4,10 +4,10 @@ import {
   UnprocessableEntityException,
 } from '@nestjs/common';
 import { InMemoryDatabaseService } from '../in-memory-database/in-memory-database.service';
-import { FavoritesResponse } from './interfaces/favorite-response';
 import { Track } from 'src/track/entities/track.entity';
 import { Album } from 'src/album/entities/album.entity';
 import { Artist } from 'src/artist/entities/artist.entity';
+import { FavoritesResponseDto } from './dto/favorites-response.dto';
 
 @Injectable()
 export class FavoritesService {
@@ -15,7 +15,7 @@ export class FavoritesService {
 
   findAll() {
     const favoritesID = this.db.getAllFavorites();
-    const favorites: FavoritesResponse = {
+    const favorites: FavoritesResponseDto = {
       artists: favoritesID.artists.map((id) => this.db.getArtistById(id)),
       albums: favoritesID.albums.map((id) => this.db.getAlbumById(id)),
       tracks: favoritesID.tracks.map((id) => this.db.getTrackById(id)),
