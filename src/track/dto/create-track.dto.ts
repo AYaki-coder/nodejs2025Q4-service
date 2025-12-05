@@ -1,5 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsInt, IsNotEmpty, IsString, ValidateIf } from 'class-validator';
+import {
+  IsInt,
+  IsNotEmpty,
+  IsString,
+  IsUUID,
+  ValidateIf,
+} from 'class-validator';
 
 export class CreateTrackDto {
   @ApiProperty({
@@ -18,7 +24,7 @@ export class CreateTrackDto {
     example: ['7f69ce5a-6eee-4fc4-a800-0372b05d9987', null],
   })
   @ValidateIf((track) => track.artistId !== null)
-  @IsString()
+  @IsUUID()
   @IsNotEmpty()
   artistId: string | null;
 
@@ -30,7 +36,7 @@ export class CreateTrackDto {
     example: ['7f69ce5a-6eee-4fc4-a800-0372b05d9987', null],
   })
   @ValidateIf((track) => track.albumId !== null)
-  @IsString()
+  @IsUUID()
   @IsNotEmpty()
   albumId: string | null;
 
