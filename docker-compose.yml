@@ -1,0 +1,43 @@
+services:
+  db:
+    build:
+      context: .
+      dockerfile: Dockerfile.db
+    restart: always
+    env_file:
+      - .env
+    ports:
+      - ${POSTGRES_PORT}:${POSTGRES_PORT}
+    volumes:
+      - postgres_db_data:/var/lib/postgresql/data
+      - postgres_db_log_data:/logs:z
+    networks:
+      - custom-network
+    container_name: ayaki-coder-home-library-db
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - ${PORT}:${PORT}
+    depends_on:
+      - db
+    restart: always
+    environment:
+      - PORT=${PORT}
+    env_file:
+      - .env
+    volumes:
+      - ./src:/my_app/src
+    networks:
+      - custom-network
+    container_name: ayaki-coder-home-library-api
+
+volumes:
+  postgres_db_data:
+  postgres_db_log_data:
+
+networks:
+  custom-network:
+    driver: bridge
