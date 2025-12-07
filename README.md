@@ -4,6 +4,7 @@
 
 - Git - [Download & Install Git](https://git-scm.com/downloads).
 - Node.js - [Download & Install Node.js](https://nodejs.org/en/download/) and the npm package manager.
+- Docker Desktop - [Download & Install Docker](https://www.docker.com/get-started)
 
 ## Downloading
 
@@ -18,10 +19,10 @@ git clone git@github.com:AYaki-coder/nodejs2025Q4-service.git
 cd ./nodejs2025Q4-service
 ```
 
-## Installing NPM modules
+## Go to branch
 
 ```
-npm install
+git checkout part2
 ```
 
 ## Create .env file
@@ -30,23 +31,35 @@ npm install
 cp ./.env.example ./.env
 ```
 
-or create it manually and add PORT
-
 ## Running application
 
 ```
-npm start
+docker compose up --watch
 ```
+
+flag `--watch` is necessary for hot reload
 
 After starting the app on port (4000 as default) you can open
 in your browser OpenAPI documentation by typing http://localhost:4000/doc/.
 For more information about OpenAPI/Swagger please visit https://swagger.io/.
 
+## Stop application
+
+```
+docker compose down
+```
+
 ## Testing
 
-After application running open new terminal and enter:
+## Installing NPM modules
 
-To run all tests without authorization
+Tests are running out of any container. Install node modules before testing
+
+```
+npm install
+```
+
+After application running (**Make sure the application is running, it may take some time**) open new terminal and enter:
 
 ```
 npm run test
