@@ -3,12 +3,6 @@ node_modules
 # Exclude coverage reports
 coverage
 
-# Source code that gets compiled
-src
-
-# Configuration files needed only for local dev/tooling
-nest-cli.json
-
 
 # Git and OS specific files
 .git

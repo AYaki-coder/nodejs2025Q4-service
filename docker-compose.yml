@@ -3,7 +3,12 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.db
-    restart: always
+    restart: unless-stopped
+    environment:
+      - POSTGRES_PORT=${POSTGRES_PORT}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
     env_file:
       - .env
     ports:
@@ -11,6 +16,11 @@ services:
     volumes:
       - postgres_db_data:/var/lib/postgresql/data
       - postgres_db_log_data:/logs:z
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U postgres']
+      interval: 5s
+      timeout: 5s
+      retries: 5
     networks:
       - custom-network
     container_name: ayaki-coder-home-library-db
@@ -22,14 +32,19 @@ services:
     ports:
       - ${PORT}:${PORT}
     depends_on:
-      - db
-    restart: always
+      db:
+        condition: service_healthy
+    command: ['npm', 'run', 'start:dev']
+    restart: unless-stopped
     environment:
       - PORT=${PORT}
+      - DATABASE_URL=${DATABASE_URL}
     env_file:
       - .env
     volumes:
       - ./src:/my_app/src
+      - /app/node_modules
+      - ./prisma:/app/prisma
     networks:
       - custom-network
     container_name: ayaki-coder-home-library-api
