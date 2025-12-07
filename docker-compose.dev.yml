@@ -3,8 +3,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.db
-    image: my_postgres_image
-    restart: always
+    restart: unless-stopped
     environment:
       - POSTGRES_PORT=${POSTGRES_PORT}
       - POSTGRES_USER=${POSTGRES_USER}
@@ -15,8 +14,8 @@ services:
     ports:
       - ${POSTGRES_PORT}:${POSTGRES_PORT}
     volumes:
-      - postgres_size_db_data:/var/lib/postgresql/data
-      - postgres_size_db_log_data:/logs:z
+      - postgres_db_data:/var/lib/postgresql/data
+      - postgres_db_log_data:/logs:z
     healthcheck:
       test: ['CMD-SHELL', 'pg_isready -U postgres']
       interval: 5s
@@ -29,31 +28,30 @@ services:
   api:
     build:
       context: .
-      dockerfile: Dockerfile.size
-    image: my_home_library_part2_image
+      dockerfile: Dockerfile
     ports:
       - ${PORT}:${PORT}
     depends_on:
       db:
         condition: service_healthy
-    develop:
-      watch:
-        - action: sync
-          path: ./src
-          target: /usr/app/src
-    restart: always
+    restart: unless-stopped
     environment:
       - PORT=${PORT}
       - DATABASE_URL=${DATABASE_URL}
     env_file:
       - .env
+    develop:
+      watch:
+        - action: sync
+          path: ./src
+          target: /usr/app/src
     networks:
       - custom-network
-    container_name: ayaki-coder-home-library-api-prod
+    container_name: ayaki-coder-home-library-api
 
 volumes:
-  postgres_size_db_data:
-  postgres_size_db_log_data:
+  postgres_db_data:
+  postgres_db_log_data:
 
 networks:
   custom-network:

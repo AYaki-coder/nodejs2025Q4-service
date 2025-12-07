@@ -1,0 +1,17 @@
+FROM node:24-alpine AS build
+WORKDIR /usr/app
+COPY package*.json ./
+RUN npm install
+COPY ./ ./  
+COPY ./prisma ./prisma
+RUN npx prisma generate
+
+
+FROM node:24-alpine AS prod
+WORKDIR /usr/app
+COPY ./ ./  
+COPY --from=build /usr/app/.env  ./.env
+COPY --from=build /usr/app/generated  ./generated
+COPY --from=build /usr/app/prisma  ./prisma
+EXPOSE ${PORT}
+CMD ["sh", "-c", "npm install && npx prisma migrate deploy && npm run start:dev"]
