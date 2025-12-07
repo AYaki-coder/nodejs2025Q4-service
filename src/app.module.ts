@@ -6,8 +6,8 @@ import { FavoritesModule } from './favorites/favorites.module';
 import { TrackModule } from './track/track.module';
 import { AlbumModule } from './album/album.module';
 import { UserModule } from './user/user.module';
-import { InMemoryDatabaseModule } from './in-memory-database/in-memory-database.module';
 import { ConfigModule } from '@nestjs/config';
+import { PrismaModule } from './prisma/prisma.module';
 
 @Module({
   imports: [
@@ -17,7 +17,7 @@ import { ConfigModule } from '@nestjs/config';
     TrackModule,
     FavoritesModule,
     UserModule,
-    InMemoryDatabaseModule,
+    PrismaModule,
   ],
   controllers: [AppController],
   providers: [AppService],

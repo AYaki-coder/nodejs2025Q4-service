@@ -36,8 +36,8 @@ export class FavoritesController {
     description: 'Returns all favorites.',
     type: FavoritesResponseDto,
   })
-  findAll() {
-    return this.favoritesService.findAll();
+  async findAll() {
+    return await this.favoritesService.findAll();
   }
 
   @Post('track/:id')
@@ -50,8 +50,8 @@ export class FavoritesController {
   @ApiUnprocessableEntityResponse({
     description: 'Track does not exist in the database.',
   })
-  addTrack(@Param('id', ParseUUIDPipe) id: string) {
-    return this.favoritesService.addTrack(id);
+  async addTrack(@Param('id', ParseUUIDPipe) id: string) {
+    return await this.favoritesService.addTrack(id);
   }
 
   @Post('album/:id')
@@ -64,8 +64,8 @@ export class FavoritesController {
   @ApiUnprocessableEntityResponse({
     description: 'Album does not exist in the database.',
   })
-  addAlbum(@Param('id', ParseUUIDPipe) id: string) {
-    return this.favoritesService.addAlbum(id);
+  async addAlbum(@Param('id', ParseUUIDPipe) id: string) {
+    return await this.favoritesService.addAlbum(id);
   }
 
   @Post('artist/:id')
@@ -81,8 +81,8 @@ export class FavoritesController {
   @ApiUnprocessableEntityResponse({
     description: 'Artist does not exist in the database.',
   })
-  addArtist(@Param('id', ParseUUIDPipe) id: string) {
-    return this.favoritesService.addArtist(id);
+  async addArtist(@Param('id', ParseUUIDPipe) id: string) {
+    return await this.favoritesService.addArtist(id);
   }
 
   @Delete('track/:id')
@@ -98,8 +98,8 @@ export class FavoritesController {
   @ApiNotFoundResponse({
     description: 'Track is not in favorites.',
   })
-  removeTrack(@Param('id', ParseUUIDPipe) id: string) {
-    return this.favoritesService.deleteTrack(id);
+  async removeTrack(@Param('id', ParseUUIDPipe) id: string) {
+    return await this.favoritesService.deleteTrack(id);
   }
 
   @Delete('album/:id')
@@ -112,8 +112,8 @@ export class FavoritesController {
   @ApiNotFoundResponse({
     description: 'Album is not in favorites.',
   })
-  removeAlbum(@Param('id', ParseUUIDPipe) id: string) {
-    return this.favoritesService.deleteAlbum(id);
+  async removeAlbum(@Param('id', ParseUUIDPipe) id: string) {
+    await this.favoritesService.deleteAlbum(id);
   }
 
   @Delete('artist/:id')
@@ -126,7 +126,7 @@ export class FavoritesController {
   @ApiNotFoundResponse({
     description: 'Artist is not in favorites.',
   })
-  removeArtist(@Param('id', ParseUUIDPipe) id: string) {
-    return this.favoritesService.deleteArtist(id);
+  async removeArtist(@Param('id', ParseUUIDPipe) id: string) {
+    return await this.favoritesService.deleteArtist(id);
   }
 }

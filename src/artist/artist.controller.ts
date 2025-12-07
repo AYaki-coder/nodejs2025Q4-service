@@ -31,8 +31,8 @@ export class ArtistController {
     status: 400,
     description: 'Bad Request (Validation failure).',
   })
-  create(@Body() createArtistDto: CreateArtistDto) {
-    return this.artistService.create(createArtistDto);
+  async create(@Body() createArtistDto: CreateArtistDto): Promise<Artist> {
+    return await this.artistService.create(createArtistDto);
   }
 
   @Get()
@@ -43,8 +43,8 @@ export class ArtistController {
     type: Artist,
     isArray: true,
   })
-  findAll(): Artist[] {
-    return this.artistService.findAll();
+  async findAll(): Promise<Artist[]> {
+    return await this.artistService.findAll();
   }
 
   @Get(':id')
@@ -62,8 +62,8 @@ export class ArtistController {
     status: 404,
     description: 'Not Found.',
   })
-  findOne(@Param('id', ParseUUIDPipe) id: string) {
-    return this.artistService.findOne(id);
+  async findOne(@Param('id', ParseUUIDPipe) id: string): Promise<Artist> {
+    return await this.artistService.findOne(id);
   }
 
   @Put(':id')
@@ -81,11 +81,11 @@ export class ArtistController {
     status: 404,
     description: 'Not Found.',
   })
-  update(
+  async update(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() updateArtistDto: UpdateArtistDto,
-  ) {
-    return this.artistService.update(id, updateArtistDto);
+  ): Promise<Artist> {
+    return await this.artistService.update(id, updateArtistDto);
   }
 
   @Delete(':id')
@@ -105,7 +105,7 @@ export class ArtistController {
     status: 404,
     description: 'Not Found.',
   })
-  remove(@Param('id', ParseUUIDPipe) id: string) {
-    return this.artistService.remove(id);
+  async remove(@Param('id', ParseUUIDPipe) id: string): Promise<void> {
+    await this.artistService.remove(id);
   }
 }

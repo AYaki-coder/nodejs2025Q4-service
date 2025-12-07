@@ -39,8 +39,8 @@ export class UserController {
     description:
       'Bad Request. body does not contain required fields or fields are invalid.',
   })
-  create(@Body() createUserDto: CreateUserDto): SafeUserEntity {
-    return this.userService.create(createUserDto);
+  async create(@Body() createUserDto: CreateUserDto) {
+    return await this.userService.create(createUserDto);
   }
 
   @Get()
@@ -50,8 +50,8 @@ export class UserController {
     type: SafeUserEntity,
     isArray: true,
   })
-  findAll(): SafeUserEntity[] {
-    return this.userService.findAll();
+  async findAll() {
+    return await this.userService.findAll();
   }
 
   @Get(':id')
@@ -59,8 +59,8 @@ export class UserController {
   @ApiOkResponse({ description: 'Returns single user', type: SafeUserEntity })
   @ApiBadRequestResponse({ description: 'Bad Request. ID is invalid UUID.' })
   @ApiNotFoundResponse({ description: 'User with ID not found.' })
-  findOne(@Param('id', ParseUUIDPipe) id: string): SafeUserEntity {
-    return this.userService.findOne(id);
+  async findOne(@Param('id', ParseUUIDPipe) id: string) {
+    return await this.userService.findOne(id);
   }
 
   @Put(':id')
@@ -75,11 +75,11 @@ export class UserController {
       'Bad Request. Invalid ID, old password mismatch, or new password invalid.',
   })
   @ApiNotFoundResponse({ description: 'User with ID not found.' })
-  update(
+  async update(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() updatePasswordDto: UpdatePasswordDto,
-  ): SafeUserEntity {
-    return this.userService.update(id, updatePasswordDto);
+  ) {
+    return await this.userService.update(id, updatePasswordDto);
   }
 
   @Delete(':id')
@@ -90,7 +90,7 @@ export class UserController {
   })
   @ApiBadRequestResponse({ description: 'Bad Request. ID is invalid UUID.' })
   @ApiNotFoundResponse({ description: 'User with ID not found.' })
-  remove(@Param('id', ParseUUIDPipe) id: string): void {
-    this.userService.remove(id);
+  async remove(@Param('id', ParseUUIDPipe) id: string) {
+    await this.userService.remove(id);
   }
 }

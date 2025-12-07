@@ -31,8 +31,8 @@ export class TrackController {
     status: 400,
     description: 'Bad Request (Validation failure).',
   })
-  create(@Body() createTrackDto: CreateTrackDto) {
-    return this.trackService.create(createTrackDto);
+  async create(@Body() createTrackDto: CreateTrackDto) {
+    return await this.trackService.create(createTrackDto);
   }
 
   @Get()
@@ -43,8 +43,8 @@ export class TrackController {
     type: Track,
     isArray: true,
   })
-  findAll() {
-    return this.trackService.findAll();
+  async findAll() {
+    return await this.trackService.findAll();
   }
 
   @Get(':id')
@@ -62,8 +62,8 @@ export class TrackController {
     status: 404,
     description: 'Not Found.',
   })
-  findOne(@Param('id', ParseUUIDPipe) id: string) {
-    return this.trackService.findOne(id);
+  async findOne(@Param('id', ParseUUIDPipe) id: string) {
+    return await this.trackService.findOne(id);
   }
 
   @Put(':id')
@@ -81,11 +81,11 @@ export class TrackController {
     status: 404,
     description: 'Not Found.',
   })
-  update(
+  async update(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() updateTrackDto: UpdateTrackDto,
   ) {
-    return this.trackService.update(id, updateTrackDto);
+    return await this.trackService.update(id, updateTrackDto);
   }
 
   @Delete(':id')
@@ -105,7 +105,7 @@ export class TrackController {
     status: 404,
     description: 'Not Found.',
   })
-  remove(@Param('id', ParseUUIDPipe) id: string) {
-    return this.trackService.remove(id);
+  async remove(@Param('id', ParseUUIDPipe) id: string) {
+    return await this.trackService.remove(id);
   }
 }
