@@ -41,10 +41,11 @@ services:
       - DATABASE_URL=${DATABASE_URL}
     env_file:
       - .env
-    volumes:
-      - ./src:/my_app/src
-      - /app/node_modules
-      - ./prisma:/app/prisma
+    develop:
+      watch:
+        - action: sync
+          path: ./src
+          target: /usr/app/src
     networks:
       - custom-network
     container_name: ayaki-coder-home-library-api
