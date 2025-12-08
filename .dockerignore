@@ -1,0 +1,19 @@
+# Dependency/Node-specific folders
+node_modules
+# Exclude coverage reports
+coverage
+
+
+# Git and OS specific files
+.git
+.gitignore
+.env # Security risk if deployed with the image, should be provided at runtime via compose/k8s
+.DS_Store
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Docker files themselves
+Dockerfile
+Dockerfile.db
+docker-compose*.yml

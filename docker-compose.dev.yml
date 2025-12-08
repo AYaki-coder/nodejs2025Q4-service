@@ -1,0 +1,58 @@
+services:
+  db:
+    build:
+      context: .
+      dockerfile: Dockerfile.db
+    restart: unless-stopped
+    environment:
+      - POSTGRES_PORT=${POSTGRES_PORT}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+    env_file:
+      - .env
+    ports:
+      - ${POSTGRES_PORT}:${POSTGRES_PORT}
+    volumes:
+      - postgres_db_data:/var/lib/postgresql/data
+      - postgres_db_log_data:/logs:z
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U postgres']
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - custom-network
+    container_name: ayaki-coder-home-library-db
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - ${PORT}:${PORT}
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+    environment:
+      - PORT=${PORT}
+      - DATABASE_URL=${DATABASE_URL}
+    env_file:
+      - .env
+    develop:
+      watch:
+        - action: sync
+          path: ./src
+          target: /usr/app/src
+    networks:
+      - custom-network
+    container_name: ayaki-coder-home-library-api
+
+volumes:
+  postgres_db_data:
+  postgres_db_log_data:
+
+networks:
+  custom-network:
+    driver: bridge

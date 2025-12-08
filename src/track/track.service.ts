@@ -1,23 +1,23 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateTrackDto } from './dto/create-track.dto';
 import { UpdateTrackDto } from './dto/update-track.dto';
-import { InMemoryDatabaseService } from '../in-memory-database/in-memory-database.service';
 import { Track } from './entities/track.entity';
+import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
 export class TrackService {
-  constructor(private readonly db: InMemoryDatabaseService) {}
+  constructor(private prisma: PrismaService) {}
 
-  create(createTrackDto: CreateTrackDto): Track {
-    return this.db.createTrack(createTrackDto);
+  async create(createTrackDto: CreateTrackDto): Promise<Track> {
+    return await this.prisma.track.create({ data: createTrackDto });
   }
 
-  findAll(): Track[] {
-    return this.db.getAllTracks();
+  async findAll(): Promise<Track[]> {
+    return await this.prisma.track.findMany();
   }
 
-  findOne(id: string): Track {
-    const track = this.db.getTrackById(id);
+  async findOne(id: string): Promise<Track> {
+    const track = await this.prisma.track.findUnique({ where: { id } });
     if (!track) {
       throw new NotFoundException();
     }
@@ -25,22 +25,28 @@ export class TrackService {
     return track;
   }
 
-  update(id: string, updateTrackDto: UpdateTrackDto): Track {
-    const track = this.db.getTrackById(id);
+  async update(id: string, updateTrackDto: UpdateTrackDto): Promise<Track> {
+    const track = await this.prisma.track.findUnique({ where: { id } });
     if (!track) {
       throw new NotFoundException();
     }
 
-    return this.db.updateTrack(id, updateTrackDto);
+    return await this.prisma.track.update({
+      where: { id },
+      data: {
+        ...updateTrackDto,
+      },
+    });
   }
 
-  remove(id: string): Track {
-    const deletedTrack = this.db.deleteTrack(id);
-    if (!deletedTrack) {
+  async remove(id: string): Promise<Track> {
+    const track = await this.prisma.track.findUnique({ where: { id } });
+    if (!track) {
       throw new NotFoundException();
     }
 
-    this.db.deleteTrackFromFavorites(id);
+    const deletedTrack = await this.prisma.track.delete({ where: { id } });
+
     return deletedTrack;
   }
 }

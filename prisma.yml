@@ -1,0 +1,18 @@
+services:
+  db:
+    build:
+      context: .
+      dockerfile: Dockerfile.db
+    restart: always
+    env_file:
+      - .env
+    ports:
+      - ${POSTGRES_PORT}:5432
+    volumes:
+      - postgres_db_data:/var/lib/postgresql/data
+      - postgres_db_log_data:/logs:z
+    container_name: ayaki-coder-home-library-db
+
+volumes:
+  postgres_db_data:
+  postgres_db_log_data:
