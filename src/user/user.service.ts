@@ -7,14 +7,21 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdatePasswordDto } from './dto/update-password.dto';
 import { PrismaService } from '../prisma/prisma.service';
 import { User } from './entities/user.entity';
+import { ConfigService } from '@nestjs/config';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UserService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private configService: ConfigService,
+  ) {}
 
   async create(createUserDto: CreateUserDto) {
+    const hashedPass = await this.hashPassword(createUserDto.password);
+    const data: CreateUserDto = { ...createUserDto, password: hashedPass };
     const user = await this.prisma.user.create({
-      data: createUserDto,
+      data,
       select: {
         id: true,
         login: true,
@@ -102,15 +109,21 @@ export class UserService {
     if (!user) {
       throw new NotFoundException();
     }
+    const isMatch = await this.isPassMatch(
+      updatePasswordDto.oldPassword,
+      user.password,
+    );
 
-    if (user.password !== updatePasswordDto.oldPassword) {
+    if (!isMatch) {
       throw new ForbiddenException();
     }
+
+    const hashedPass = await this.hashPassword(updatePasswordDto.newPassword);
 
     const updatedUser = await this.prisma.user.update({
       where: { id },
       data: {
-        password: updatePasswordDto.newPassword,
+        password: hashedPass,
         version: {
           increment: 1,
         },
@@ -153,5 +166,24 @@ export class UserService {
     });
 
     return deletedUser;
+  }
+
+  async isPassMatch(
+    inputPassword: string,
+    storedPassword: string,
+  ): Promise<boolean> {
+    return await bcrypt.compare(inputPassword, storedPassword);
+  }
+
+  private async hashPassword(password: string): Promise<string> {
+    const saltRoundsString =
+      this.configService.get<string>('CRYPT_SALT') ?? '10';
+    const saltRounds = parseInt(saltRoundsString, 10);
+
+    if (isNaN(saltRounds)) {
+      throw new Error('CRYPT_SALT must be a number in the .env file');
+    }
+
+    return bcrypt.hash(password, saltRounds);
   }
 }

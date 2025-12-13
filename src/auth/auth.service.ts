@@ -9,7 +9,6 @@ import { JwtService } from '@nestjs/jwt';
 import { SignUpDto } from './dto/signup.dto';
 import { LoginDto } from './dto/login.dto';
 import { ConfigService } from '@nestjs/config';
-import * as bcrypt from 'bcrypt';
 import * as ms from 'ms';
 
 @Injectable()
@@ -26,11 +25,7 @@ export class AuthService {
       throw new ConflictException();
     }
 
-    const hashedPass = await this.hashPassword(signUpDto.password);
-    return await this.userService.create({
-      ...signUpDto,
-      password: hashedPass,
-    });
+    return await this.userService.create(signUpDto);
   }
 
   async login(
@@ -42,7 +37,7 @@ export class AuthService {
       throw new ForbiddenException();
     }
 
-    const isMatch = await bcrypt.compare(password, user.password);
+    const isMatch = await this.userService.isPassMatch(password, user.password);
 
     if (!isMatch) {
       throw new ForbiddenException();
@@ -97,17 +92,5 @@ export class AuthService {
       accessToken: await this.jwtService.signAsync(payload),
       refreshToken,
     };
-  }
-
-  private async hashPassword(password: string): Promise<string> {
-    const saltRoundsString =
-      this.configService.get<string>('CRYPT_SALT') ?? '10';
-    const saltRounds = parseInt(saltRoundsString, 10);
-
-    if (isNaN(saltRounds)) {
-      throw new Error('CRYPT_SALT must be a number in the .env file');
-    }
-
-    return bcrypt.hash(password, saltRounds);
   }
 }
