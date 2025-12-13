@@ -6,6 +6,7 @@ import {
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdatePasswordDto } from './dto/update-password.dto';
 import { PrismaService } from '../prisma/prisma.service';
+import { User } from './entities/user.entity';
 
 @Injectable()
 export class UserService {
@@ -57,6 +58,21 @@ export class UserService {
     });
     if (!user) {
       throw new NotFoundException();
+    }
+
+    return {
+      ...user,
+      createdAt: user.createdAt.getTime(),
+      updatedAt: user.updatedAt.getTime(),
+    };
+  }
+
+  async findOneByLogin(login: string): Promise<User> {
+    const user = await this.prisma.user.findUnique({
+      where: { login: login },
+    });
+    if (!user) {
+      return null;
     }
 
     return {
