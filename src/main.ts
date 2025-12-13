@@ -1,13 +1,18 @@
-import { NestFactory } from '@nestjs/core';
+import { HttpAdapterHost, NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import * as yaml from 'js-yaml';
 import { writeFileSync } from 'node:fs';
+import { GlobalHttpExceptionFilter } from './global-exception-filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
+  const httpAdapterHost = app.get(HttpAdapterHost);
+
   app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalFilters(new GlobalHttpExceptionFilter(httpAdapterHost));
 
   const config = new DocumentBuilder()
     .setTitle('Home Library Service API')
