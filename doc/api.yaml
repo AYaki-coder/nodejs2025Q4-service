@@ -591,6 +591,20 @@ paths:
         '200':
           description: ''
       tags: *ref_5
+  /auth/refresh:
+    post:
+      operationId: AuthController_refresh
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RefreshTokenDto'
+      responses:
+        '200':
+          description: ''
+      tags: *ref_5
 info:
   title: Home Library Service API
   description: API documentation for the music library project
@@ -928,3 +942,6 @@ components:
       required:
         - login
         - password
+    RefreshTokenDto:
+      type: object
+      properties: {}

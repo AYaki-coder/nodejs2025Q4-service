@@ -82,6 +82,18 @@ export class UserService {
     };
   }
 
+  async findOneById(id: string) {
+    const user = await this.prisma.user.findUnique({
+      where: { id },
+      select: {
+        id: true,
+        login: true,
+      },
+    });
+
+    return user;
+  }
+
   async update(id: string, updatePasswordDto: UpdatePasswordDto) {
     const user = await this.prisma.user.findUnique({
       where: { id },
