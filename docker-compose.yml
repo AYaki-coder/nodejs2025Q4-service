@@ -18,7 +18,7 @@ services:
       - postgres_size_db_data:/var/lib/postgresql/data
       - postgres_size_db_log_data:/logs:z
     healthcheck:
-      test: ['CMD-SHELL', 'pg_isready -U postgres']
+      test: ['CMD-SHELL', 'pg_isready -U ${POSTGRES_USER}']
       interval: 5s
       timeout: 5s
       retries: 5
