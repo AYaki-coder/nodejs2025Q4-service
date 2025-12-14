@@ -25,10 +25,7 @@ export class LoggerMiddleware implements NestMiddleware {
       const duration = Date.now() - startTime;
       const statusCode = res.statusCode;
 
-      const queryParamsStr =
-        Object.keys(req.query).length > 0
-          ? `\nQuery params: ${JSON.stringify(req.query, null, 4)}`
-          : '';
+      const queryParamsStr = `\nQuery params: ${JSON.stringify(req.query, null, 4)}`;
 
       const requestBodyStr = req.body
         ? `\nRequest body:${JSON.stringify(req.body, null, 4)}`
@@ -36,7 +33,7 @@ export class LoggerMiddleware implements NestMiddleware {
       const responseBodyStr = responseBody
         ? `\nResponse body:${JSON.stringify(responseBody, null, 4)}`
         : '';
-      const message = ` ${statusCode} ${req.method} ${req.url} - ${duration}ms${queryParamsStr}${requestBodyStr}${responseBodyStr}`;
+      const message = ` ${statusCode} ${req.method} ${req.url} - ${duration}ms${queryParamsStr}${requestBodyStr}${responseBodyStr}\n\n`;
 
       if (statusCode >= 500) {
         this.logger.error(message, '', 'Response');

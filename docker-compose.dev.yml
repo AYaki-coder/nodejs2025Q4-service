@@ -40,6 +40,8 @@ services:
       - DATABASE_URL=${DATABASE_URL}
     env_file:
       - .env
+    volumes:
+      - ./logs:/usr/app/logs
     develop:
       watch:
         - action: sync
