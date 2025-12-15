@@ -22,7 +22,7 @@ cd ./nodejs2025Q4-service
 ## Go to branch
 
 ```
-git checkout part2
+git checkout part3
 ```
 
 ## Create .env file
@@ -62,14 +62,20 @@ npm install
 After application running (**Make sure the application is running, it may take some time**) open new terminal and enter:
 
 ```
-npm run test
+npm run test:auth
 ```
 
-To run only one of all test suites
+```
+npm run test:refresh
+```
+
+If you have a problems with tests try
 
 ```
-npm run test -- <path to suite>
+npx prisma migrate reset --force
 ```
+
+or clear volumes. And try to test again
 
 ### Auto-fix and format
 

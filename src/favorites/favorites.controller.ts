@@ -6,6 +6,7 @@ import {
   ParseUUIDPipe,
   HttpCode,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
 import { FavoritesService } from './favorites.service';
 import {
@@ -23,8 +24,10 @@ import { FavoritesResponseDto } from './dto/favorites-response.dto';
 import { Track } from 'src/track/entities/track.entity';
 import { Album } from 'src/album/entities/album.entity';
 import { Artist } from 'src/artist/entities/artist.entity';
+import { AuthGuard } from '../auth/auth.guard';
 
 @ApiTags('favorites')
+@UseGuards(AuthGuard)
 @Controller('favs')
 export class FavoritesController {
   constructor(private readonly favoritesService: FavoritesService) {}

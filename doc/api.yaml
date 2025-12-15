@@ -562,6 +562,49 @@ paths:
           description: User with ID not found.
       summary: Delete user
       tags: *ref_4
+  /auth/signup:
+    post:
+      operationId: AuthController_signup
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SignUpDto'
+      responses:
+        '201':
+          description: ''
+      tags: &ref_5
+        - Auth
+  /auth/login:
+    post:
+      operationId: AuthController_login
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginDto'
+      responses:
+        '200':
+          description: ''
+      tags: *ref_5
+  /auth/refresh:
+    post:
+      operationId: AuthController_refresh
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RefreshTokenDto'
+      responses:
+        '200':
+          description: ''
+      tags: *ref_5
 info:
   title: Home Library Service API
   description: API documentation for the music library project
@@ -642,7 +685,7 @@ components:
             The UUID of the artist who created the album, or null if the artist
             does not exist.
           nullable: true
-          example: &ref_5
+          example: &ref_6
             - 7f69ce5a-6eee-4fc4-a800-0372b05d9987
             - null
       required:
@@ -695,7 +738,7 @@ components:
             The UUID of the artist who created the album, or null if the artist
             does not exist.
           nullable: true
-          example: *ref_5
+          example: *ref_6
     CreateTrackDto:
       type: object
       properties:
@@ -709,7 +752,7 @@ components:
             The UUID of the artist who created the album, or null if the artist
             does not exist.
           nullable: true
-          example: &ref_6
+          example: &ref_7
             - 7f69ce5a-6eee-4fc4-a800-0372b05d9987
             - null
         albumId:
@@ -718,7 +761,7 @@ components:
             The UUID of the album where the track belongs, or null if the album
             does not exist.
           nullable: true
-          example: &ref_7
+          example: &ref_8
             - 7f69ce5a-6eee-4fc4-a800-0372b05d9987
             - null
         duration:
@@ -782,14 +825,14 @@ components:
             The UUID of the artist who created the album, or null if the artist
             does not exist.
           nullable: true
-          example: *ref_6
+          example: *ref_7
         albumId:
           type: string
           description: >-
             The UUID of the album where the track belongs, or null if the album
             does not exist.
           nullable: true
-          example: *ref_7
+          example: *ref_8
         duration:
           type: number
           description: The duration of the track in sec
@@ -871,3 +914,34 @@ components:
       required:
         - oldPassword
         - newPassword
+    SignUpDto:
+      type: object
+      properties:
+        login:
+          type: string
+          description: The user login/username
+          example: newUserLogin
+        password:
+          type: string
+          description: 'The user password '
+          example: P@ssw0rd123!
+      required:
+        - login
+        - password
+    LoginDto:
+      type: object
+      properties:
+        login:
+          type: string
+          description: The user login/username
+          example: newUserLogin
+        password:
+          type: string
+          description: 'The user password '
+          example: P@ssw0rd123!
+      required:
+        - login
+        - password
+    RefreshTokenDto:
+      type: object
+      properties: {}
